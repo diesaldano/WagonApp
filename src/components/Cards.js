@@ -108,13 +108,13 @@ export default function Cards(props) {
                   </div>
                 </div>
                 <div class="my-2 flex flex-col">
-                  <button
+                  {/* <button
                     type="button"
                     onClick={handleChange}
                     class="p-0 text-base mb-2 font-semibold hover:text-red-700  mouse transition ease-in duration-200 focus:outline-none"
                   >
                     Reservar
-                  </button>
+                  </button> */}
                   <Link
                     to={{
                       pathname: `/productos/${data.id}`,
