@@ -126,7 +126,7 @@ export default function Cards(props) {
                       onClick={() => handleMore(data)}
                       class="p-0 text-base mb-2 font-semibold hover:text-red-700  mouse transition ease-in duration-200 focus:outline-none"
                     >
-                      Ver más
+                      Ver Más
                     </button>
                   </Link>
                 </div>
