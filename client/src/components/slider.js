@@ -1,7 +1,6 @@
 import data from "../data";
 import "../components/slider.css";
 function Slider() {
-  console.log(data);
   return (
     <div class="flex flex-col items-center my-2">
       <div class="w-full bg-white rounded overflow-x-hidden flex snap-x vh-slider">
@@ -54,7 +53,7 @@ function Slider() {
         >
           <button
             id="Button1"
-            onclick="sliderButton1()"
+            onClick="sliderButton1()"
             class="bg-red-600 rounded-full w-4 p-2 "
           ></button>
         </a>
@@ -64,7 +63,7 @@ function Slider() {
         >
           <button
             id="Button2"
-            onclick="sliderButton2()"
+            onClick="sliderButton2()"
             class="bg-red-600 rounded-full w-4 p-2 "
           ></button>
         </a>
@@ -74,7 +73,7 @@ function Slider() {
         >
           <button
             id="Button3"
-            onclick="sliderButton3()"
+            onClick="sliderButton3()"
             class="bg-red-600 rounded-full w-4 p-2 "
           ></button>
         </a>
@@ -84,7 +83,7 @@ function Slider() {
         >
           <button
             id="Button4"
-            onclick="sliderButton4()"
+            onClick="sliderButton4()"
             class="bg-red-600 rounded-full w-4 p-2 "
           ></button>
         </a>

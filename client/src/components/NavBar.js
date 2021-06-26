@@ -1,12 +1,11 @@
 /* This example requires Tailwind CSS v2.0+ */
-import { Disclosure, Menu, Transition } from "@headlessui/react";
+import { Disclosure, Menu } from "@headlessui/react";
 import { MenuIcon, XIcon } from "@heroicons/react/outline";
 import {
   BrowserRouter as Router,
   Switch,
   Route,
   Link,
-  Redirect
 } from "react-router-dom";
 
 import Home from "../views/Home";

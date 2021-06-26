@@ -1,5 +1,9 @@
 import data from "../data";
 import Slider from "../components/slider";
+import Form from "../views/FormNew"
+import Mensory from '../components/Mensory'
+import './home.css'
+
 function InitPage() {
   return (
     <div>
@@ -8,7 +12,7 @@ function InitPage() {
       <p class="text-gray-600 text-center font-light mb-5 mx-5">
         {data[0].subtitle}
       </p>
-      <div class="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-center w-100">
+      <div class="mt-5 mb-20 sm:mt-8 sm:flex sm:justify-center lg:justify-center w-100">
         <div class="lg:w-1/4 md:w-1/3 rounded-md sm:w-1/3">
           <a
             href="/productos"
@@ -18,6 +22,9 @@ function InitPage() {
           </a>
         </div>
       </div>
+
+      <Mensory/>
+      <Form/>
     </div>
   );
 }

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Link, Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Modal from "./Modal";
 
 export default function Cards(props) {
   const [productos, setProductos] = useState([]);
   const [open, setOpen] = React.useState(false);
-  const [more, setMore] = React.useState(false);
+  
 
   console.log(props);
   const getProductos = () =>
@@ -94,27 +94,27 @@ export default function Cards(props) {
                   <p class="font-semibold text-base mb-2">Recomendations</p>
                   <div class="flex space-x-2">
                     <img
-                      src="https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+                      src="https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="foto 2"
                       class="w-6 h-6 rounded-full"
                     />
                     <img
-                      src="https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+                      src="https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="foto 2"
                       class="w-6 h-6 rounded-full"
                     />
                     <img
-                      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxSqK0tVELGWDYAiUY1oRrfnGJCKSKv95OGUtm9eKG9HQLn769YDujQi1QFat32xl-BiY&usqp=CAU"
+                      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxSqK0tVELGWDYAiUY1oRrfnGJCKSKv95OGUtm9eKG9HQLn769YDujQi1QFat32xl-BiY&usqp=CAU" alt="foto 2"
                       class="w-6 h-6 rounded-full"
                     />
                   </div>
                 </div>
                 <div class="my-2 flex flex-col">
-                  {/* <button
+                  <button
                     type="button"
                     onClick={handleChange}
                     class="p-0 text-base mb-2 font-semibold hover:text-red-700  mouse transition ease-in duration-200 focus:outline-none"
                   >
                     Reservar
-                  </button> */}
+                  </button>
                   <Link
                     to={{
                       pathname: `/productos/${data.id}`,
@@ -147,9 +147,8 @@ export default function Cards(props) {
     setOpen(open);
   }
 
-  function handleMore(e, more) {
-    setMore((more = true));
-    console.log("handle more", e, more);
+  function handleMore(e) {
+    console.log("handle more", e);
   }
 
   return (
