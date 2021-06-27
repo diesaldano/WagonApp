@@ -1,10 +1,12 @@
 import React,{ Fragment, useRef, useState, useEffect } from "react";
 import { Dialog, Transition } from "@headlessui/react";
+import './Modal.css'
 
 
 export default function Modal(props) {
   const [open, setOpen] = useState(true);
   const [data, setData] = useState(null);
+  const [cart, setCart] = useState(false);
 
   useEffect(() => {
     fetch("/api")
@@ -59,8 +61,8 @@ export default function Modal(props) {
             leaveFrom="opacity-100 translate-y-0 sm:scale-100"
             leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
-            <div className="inline-block align-bottom bg-red-500 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-              <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+            <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+              <section className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4 shopping-cart">
                 <div className="sm:flex sm:items-start">
                   <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                       <form class="grid bg-white rounded-lg ">
@@ -70,31 +72,23 @@ export default function Modal(props) {
                           </div>
                         </div>
                         <div class="flex justify-center">
-                          <div class="flex w-2/6	">
+                          <div class="flex flex-col w-3/6	">
                             <img src={props.data.photo_card} alt={props.data.marca} />                      
                           </div>
                           <div class="flex flex-col w-3/6 px-3">
                             <h3 id="product-description" class="text-gray-900 text-lg leading-6 font-medium">{props.data.marca} {props.data.modelo} {props.data.year}</h3>
                             <h3 id="unit-price" class="text-gray-600 ">{props.data.precio}</h3>
-                          </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 mt-5 mx-7">
-                          <label for="money" class=" duration-300 top-3 left-5 -z-1 origin-0 text-gray-500 uppercase md:text-sm text-xs text-gray-500 text-light font-semibold">Quantity</label>
-                          <input id="quantity"  type="number" name="money"  placeholder="Ingress the quantity" onChange={updatePrice}
-                            class="form-control pt-3 pb-2 pl-5 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-black border-gray-200"/>
-                          {/* <label for="money" class=" duration-300 top-3 left-5 -z-1 origin-0 text-gray-500">Quantity</label> */}
-                          {/* <input id="quantity" type="number" name="money"  placeholder="Ingress the quantity" class="form-control pt-3 pb-2 pl-5 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-black border-gray-200"/> */}
+                            <label for="money" class=" duration-300 top-3 left-5 -z-1 origin-0 text-gray-500 uppercase md:text-sm text-xs text-gray-500 text-light font-semibold">Quantity</label>
+                            <input id="quantity"  type="number" name="money"  placeholder="Ingress the quantity" onChange={updatePrice}
+                              class="form-control pt-3 pb-2 pl-5 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none focus:outline-none focus:ring-0 focus:border-black border-gray-200"/>
                           <div class="py-4 color-grey-500">
                             <h3 class="text-gray-900 text-lg leading-6 font-medium">Cart</h3>
                             <div class="summary-item"><span class="text">Subtotal</span><span class="price" id="cart-total"></span></div>
-                            {/* <button class="btn btn-primary btn-lg btn-block" id="checkout-btn">Checkoutttt</button> */}
                           </div>
-                        </div>
+                          </div>
 
+                        </div>
                         <div class='flex items-center justify-center  md:gap-8 gap-4 pt-5 pb-5'>
-                          {/* <button class='w-auto bg-gray-500 hover:bg-gray-700 rounded-lg shadow-xl font-medium text-white px-4 py-2'>Cancel</button>
-                          <button class='w-auto bg-purple-500 hover:bg-purple-700 rounded-lg shadow-xl font-medium text-white px-4 py-2'>Create</button> */}
                           <button
                             type="button"
                             className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
@@ -116,7 +110,7 @@ export default function Modal(props) {
                       </form>
                   </div>
                 </div>
-              </div>
+              </section>
               <section class="payment-form dark">
                 <div class="container_payment">
                   <div class="block-heading">
@@ -163,8 +157,6 @@ export default function Modal(props) {
                   </div>
                 </div>
               </section>
-
- 
             </div>
           </Transition.Child>
         </div>
@@ -195,10 +187,10 @@ function checkoutMp() {
     })
     .then(function (preference) {
       createCheckoutButton(preference.id);
-      document.querySelector(".shopping-cart").fadeOut(500);
-      setTimeout(() => {
-        document.querySelector(".container_payment").show(500).fadeIn();
-      }, 500);
+      // document.querySelector(".shopping-cart").fadeOut(500);
+      // setTimeout(() => {
+      //   document.querySelector(".container_payment").show(500).fadeIn();
+      // }, 500);
     })
     .catch(function () {
       alert("Unexpected error");
@@ -233,9 +225,8 @@ function updatePrice() {
   document.getElementById("summary-quantity").innerHTML = quantity;
   document.getElementById("summary-total").innerHTML = "$ " + amount;
 }   
-//document.getElementById("quantity").addEventListener("change", updatePrice);
-//updatePrice();
 
+/**return  to cart */
 function handleBack(){
   document.querySelector(".container_payment").fadeOut(500);
   setTimeout(() => {
