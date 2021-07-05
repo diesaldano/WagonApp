@@ -6,7 +6,7 @@ import './Modal.css'
 export default function Modal(props) {
   const [open, setOpen] = useState(true);
   const [data, setData] = useState(null);
-  const [cart, setCart] = useState(false);
+  const [confirmar, setConfirmar] = useState(false);
 
   useEffect(() => {
     fetch("/api")
@@ -14,7 +14,7 @@ export default function Modal(props) {
       .then((data) => setData(data.message));
   }, []);
 
-  console.log(data)
+  console.log(props.data)
 
   const cancelButtonRef = useRef(null);
 
@@ -22,6 +22,83 @@ export default function Modal(props) {
     setOpen(false);
     props.onUpdate(open);
   }
+
+
+  function checkoutMp(confirmar) {
+    console.log("Opening checkout");
+  
+    let orderData = {
+      quantity: document.getElementById("quantity").value,
+      description: document.getElementById("product-description").innerHTML,
+      price: document.getElementById("unit-price").innerHTML
+    };
+    console.log(orderData);
+  
+    fetch("/create_preference", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(orderData)
+    })
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (preference) {
+        createCheckoutButton(preference.id);
+        setConfirmar((confirmar = true));
+        console.log(confirmar)
+        //setOpen((open = true));
+        // document.querySelector(".shopping-cart").fadeOut(500);
+        // setTimeout(() => {
+        //   document.querySelector(".container_payment").show(500).fadeIn();
+        // }, 500);
+      })
+      .catch(function () {
+        alert("Unexpected error");
+        // document.getElementById("#checkout-btn").attr("disabled", false)
+      });
+    
+  }
+  
+  //Create preference when click on checkout button
+  function createCheckoutButton(preference) {
+    var script = document.createElement("script");
+    
+  //   // The source domain must be completed according to the site for which you are integrating.
+  //   // For example: for Argentina ".com.ar" or for Brazil ".com.br".
+    script.src = "https://www.mercadopago.com.ar/integrations/v1/web-payment-checkout.js";
+    script.type = "text/javascript";
+    script.dataset.preferenceId = preference;
+    document.getElementById("button-checkout").innerHTML = "";
+    document.querySelector("#button-checkout").appendChild(script);
+  }
+  
+  
+  //Handle price update
+  
+  function updatePrice() {
+    let quantity = document.getElementById("quantity").value;
+    let unitPrice = document.getElementById("unit-price").innerHTML;
+    let amount = parseInt(unitPrice) * parseInt(quantity)
+    console.log(amount, unitPrice, quantity)
+    document.getElementById("cart-total").innerHTML = "$ " + amount;
+    document.getElementById("summary-price").innerHTML = "$ " + unitPrice;
+    document.getElementById("summary-quantity").innerHTML = quantity;
+    document.getElementById("summary-total").innerHTML = "$ " + amount;
+  }   
+  
+  /**return  to cart */
+  function handleBack(confirmar){
+    // document.querySelector(".container_payment").fadeOut(500);
+    // setTimeout(() => {
+    //   document.querySelector(".shopping-cart").show(500).fadeIn();
+    // }, 500);
+    setConfirmar((confirmar = false))
+    console.log(confirmar)
+    //document.getElementById("checkout-btn").attr("disabled", false);
+  }
+  console.log(confirmar)
   return (
     <Transition.Root show={props.open} as={Fragment}>
       <Dialog
@@ -111,6 +188,7 @@ export default function Modal(props) {
                   </div>
                 </div>
               </section>
+              
               <section class="payment-form dark">
                 <div class="container_payment">
                   <div class="block-heading">
@@ -163,75 +241,8 @@ export default function Modal(props) {
       </Dialog>
     </Transition.Root>
   );
-}
 
-function checkoutMp() {
-  console.log("Opening checkout");
-
-  let orderData = {
-    quantity: document.getElementById("quantity").value,
-    description: document.getElementById("product-description").innerHTML,
-    price: document.getElementById("unit-price").innerHTML
-  };
-  console.log(orderData);
-
-  fetch("/create_preference", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(orderData)
-  })
-    .then(function (response) {
-      return response.json();
-    })
-    .then(function (preference) {
-      createCheckoutButton(preference.id);
-      // document.querySelector(".shopping-cart").fadeOut(500);
-      // setTimeout(() => {
-      //   document.querySelector(".container_payment").show(500).fadeIn();
-      // }, 500);
-    })
-    .catch(function () {
-      alert("Unexpected error");
-      // document.getElementById("#checkout-btn").attr("disabled", false)
-    });
   
-}
-
-//Create preference when click on checkout button
-function createCheckoutButton(preference) {
-  var script = document.createElement("script");
   
-//   // The source domain must be completed according to the site for which you are integrating.
-//   // For example: for Argentina ".com.ar" or for Brazil ".com.br".
-  script.src = "https://www.mercadopago.com.ar/integrations/v1/web-payment-checkout.js";
-  script.type = "text/javascript";
-  script.dataset.preferenceId = preference;
-  document.getElementById("button-checkout").innerHTML = "";
-  document.querySelector("#button-checkout").appendChild(script);
-}
-
-
-//Handle price update
-
-function updatePrice() {
-  let quantity = document.getElementById("quantity").value;
-  let unitPrice = document.getElementById("unit-price").innerHTML;
-  let amount = parseInt(unitPrice) * parseInt(quantity)
-  console.log(amount, unitPrice, quantity)
-  document.getElementById("cart-total").innerHTML = "$ " + amount;
-  document.getElementById("summary-price").innerHTML = "$ " + unitPrice;
-  document.getElementById("summary-quantity").innerHTML = quantity;
-  document.getElementById("summary-total").innerHTML = "$ " + amount;
-}   
-
-/**return  to cart */
-function handleBack(){
-  document.querySelector(".container_payment").fadeOut(500);
-  setTimeout(() => {
-    document.querySelector(".shopping-cart").show(500).fadeIn();
-  }, 500);
-  document.querySelector("#checkout-btn").attr("disabled", false);
 }
 
