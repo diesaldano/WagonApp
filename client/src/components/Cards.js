@@ -1,31 +1,54 @@
 import React, { useState, useEffect } from "react";
-import { Link, Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Modal from "./Modal";
+import Tabletop from "tabletop";
+import Loading from '../components/Loading'
 
-export default function Cards(props) {
-  const [productos, setProductos] = useState([]);
+export default function Cards() {
+  // const [productos, setProductos] = useState([]);
   const [open, setOpen] = React.useState(false);
-  const [more, setMore] = React.useState(false);
+  const [data, setData] = useState([]);
+  const [dataChild, setDataChild] = useState({});
+  const [isLoading, SetIsLoading] = useState(true)
+  
 
-  console.log(props);
-  const getProductos = () =>
-    fetch("../db/camionetas.json", {
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json"
-      }
-    }).then(res => res.json());
+  // const getProductos = () =>
+  //   fetch("../db/camionetas.json", {
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       Accept: "application/json"
+  //     }
+  //   }).then(res => res.json());
+
+  // useEffect(() => {
+  //   getProductos().then(productos => setProductos(productos));
+  // }, []);
 
   useEffect(() => {
-    getProductos().then(productos => setProductos(productos));
+    SetIsLoading(true);
+    Tabletop.init({
+      key: "1BCWRoOwjpoIIZUnYYpc8p6fzcz4JNCecsJIE0xm3Ts8",
+      simpleSheet: true
+    })
+      .then((data) => setData(data))
+      .catch((err) => console.warn(err));
+    new Promise( res =>{
+      setTimeout(()=>{
+        res()
+      }, 3000)
+    }).then(()=>{
+      SetIsLoading(false);
+    })
   }, []);
 
-  let dataToChild = [];
   let productToRender;
 
-  if (productos) {
-    productToRender = productos.map(data => {
-      dataToChild = { ...data };
+  if(isLoading){
+    return(
+      <Loading data={data}/>
+    )
+  } else {
+    productToRender = data.map(data => {
       return (
         <div
           key={data.id}
@@ -38,14 +61,14 @@ export default function Cards(props) {
             src={data.photo_card}
             alt="Sunset in the mountains"
           />
-
+  
           <div
             class="relative bg-white py-6 px-6 rounded-3xl "
             id="producto-detail"
           >
             <div>
               <p class="text-xl font-semibold my-2">
-                {data.marca} - {data.modelo} -{data.id}
+              {data.id} - {data.marca} - {data.modelo}
               </p>
               <div class="flex space-x-2 text-gray-600 text-sm">
                 <svg
@@ -88,33 +111,35 @@ export default function Cards(props) {
                 <p>Precio: {data.precio}</p>
               </div>
               <div class="border-t-2"></div>
-
+  
               <div class="flex justify-between">
                 <div class="my-2">
                   <p class="font-semibold text-base mb-2">Recomendations</p>
                   <div class="flex space-x-2">
                     <img
-                      src="https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+                      src="https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="foto 2"
                       class="w-6 h-6 rounded-full"
                     />
                     <img
-                      src="https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+                      src="https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="foto 2"
                       class="w-6 h-6 rounded-full"
                     />
                     <img
-                      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxSqK0tVELGWDYAiUY1oRrfnGJCKSKv95OGUtm9eKG9HQLn769YDujQi1QFat32xl-BiY&usqp=CAU"
+                      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxSqK0tVELGWDYAiUY1oRrfnGJCKSKv95OGUtm9eKG9HQLn769YDujQi1QFat32xl-BiY&usqp=CAU" alt="foto 2"
                       class="w-6 h-6 rounded-full"
                     />
                   </div>
                 </div>
                 <div class="my-2 flex flex-col">
-                  {/* <button
+                  <button
                     type="button"
-                    onClick={handleChange}
+                    // onClick={handleChange}
+                    onClick={() => handleChange(open, data)}
+  
                     class="p-0 text-base mb-2 font-semibold hover:text-red-700  mouse transition ease-in duration-200 focus:outline-none"
                   >
                     Reservar
-                  </button> */}
+                  </button>
                   <Link
                     to={{
                       pathname: `/productos/${data.id}`,
@@ -138,18 +163,25 @@ export default function Cards(props) {
     });
   }
 
+
+  
+  
+
+
   /** Open Modal*/
-  function handleChange(open) {
+  function handleChange(open,e) {
+    console.log(e)
+    setDataChild( e)
     setOpen((open = true));
+
   }
   /** Close Modal */
   function handleChangeClose(open) {
     setOpen(open);
   }
 
-  function handleMore(e, more) {
-    setMore((more = true));
-    console.log("handle more", e, more);
+  function handleMore(e) {
+    console.log("handle more", e);
   }
 
   return (
@@ -158,7 +190,7 @@ export default function Cards(props) {
       style={{ backgroundColor: "#ebebeb" }}
     >
       {productToRender}
-      <Modal open={open} onUpdate={handleChangeClose} data={dataToChild} />
+      <Modal open={open} onUpdate={handleChangeClose} data={dataChild} />
     </div>
   );
 }

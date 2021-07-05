@@ -1,0 +1,10 @@
+
+.coso {
+    width: 100%;
+    margin-bottom: 12px;
+}
+
+.main {
+    column-count: 4;
+    column-width: 200px;
+}
