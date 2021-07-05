@@ -98,7 +98,7 @@ export default function Modal(props) {
     console.log(confirmar)
     //document.getElementById("checkout-btn").attr("disabled", false);
   }
-  console.log(confirmar)
+  
   return (
     <Transition.Root show={props.open} as={Fragment}>
       <Dialog

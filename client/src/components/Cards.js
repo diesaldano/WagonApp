@@ -2,13 +2,14 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Modal from "./Modal";
 import Tabletop from "tabletop";
+import Loading from '../components/Loading'
 
 export default function Cards() {
   // const [productos, setProductos] = useState([]);
   const [open, setOpen] = React.useState(false);
   const [data, setData] = useState([]);
   const [dataChild, setDataChild] = useState({});
-
+  const [isLoading, SetIsLoading] = useState(true)
   
 
   // const getProductos = () =>
@@ -24,21 +25,30 @@ export default function Cards() {
   // }, []);
 
   useEffect(() => {
+    SetIsLoading(true);
     Tabletop.init({
       key: "1BCWRoOwjpoIIZUnYYpc8p6fzcz4JNCecsJIE0xm3Ts8",
       simpleSheet: true
     })
       .then((data) => setData(data))
       .catch((err) => console.warn(err));
+    new Promise( res =>{
+      setTimeout(()=>{
+        res()
+      }, 3000)
+    }).then(()=>{
+      SetIsLoading(false);
+    })
   }, []);
 
-  let dataToChild = [];
   let productToRender;
 
-  if (data) {
-    console.log(data)
+  if(isLoading){
+    return(
+      <Loading data={data}/>
+    )
+  } else {
     productToRender = data.map(data => {
-      dataToChild = { ...data };
       return (
         <div
           key={data.id}
@@ -51,7 +61,7 @@ export default function Cards() {
             src={data.photo_card}
             alt="Sunset in the mountains"
           />
-
+  
           <div
             class="relative bg-white py-6 px-6 rounded-3xl "
             id="producto-detail"
@@ -101,7 +111,7 @@ export default function Cards() {
                 <p>Precio: {data.precio}</p>
               </div>
               <div class="border-t-2"></div>
-
+  
               <div class="flex justify-between">
                 <div class="my-2">
                   <p class="font-semibold text-base mb-2">Recomendations</p>
@@ -125,7 +135,7 @@ export default function Cards() {
                     type="button"
                     // onClick={handleChange}
                     onClick={() => handleChange(open, data)}
-
+  
                     class="p-0 text-base mb-2 font-semibold hover:text-red-700  mouse transition ease-in duration-200 focus:outline-none"
                   >
                     Reservar
@@ -152,6 +162,11 @@ export default function Cards() {
       );
     });
   }
+
+
+  
+  
+
 
   /** Open Modal*/
   function handleChange(open,e) {
