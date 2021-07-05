@@ -1,30 +1,43 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Modal from "./Modal";
+import Tabletop from "tabletop";
 
-export default function Cards(props) {
-  const [productos, setProductos] = useState([]);
+export default function Cards() {
+  // const [productos, setProductos] = useState([]);
   const [open, setOpen] = React.useState(false);
+  const [data, setData] = useState([]);
+  const [dataChild, setDataChild] = useState({});
+
   
 
-  console.log(props);
-  const getProductos = () =>
-    fetch("../db/camionetas.json", {
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json"
-      }
-    }).then(res => res.json());
+  // const getProductos = () =>
+  //   fetch("../db/camionetas.json", {
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       Accept: "application/json"
+  //     }
+  //   }).then(res => res.json());
+
+  // useEffect(() => {
+  //   getProductos().then(productos => setProductos(productos));
+  // }, []);
 
   useEffect(() => {
-    getProductos().then(productos => setProductos(productos));
+    Tabletop.init({
+      key: "1BCWRoOwjpoIIZUnYYpc8p6fzcz4JNCecsJIE0xm3Ts8",
+      simpleSheet: true
+    })
+      .then((data) => setData(data))
+      .catch((err) => console.warn(err));
   }, []);
 
   let dataToChild = [];
   let productToRender;
 
-  if (productos) {
-    productToRender = productos.map(data => {
+  if (data) {
+    console.log(data)
+    productToRender = data.map(data => {
       dataToChild = { ...data };
       return (
         <div
@@ -45,7 +58,7 @@ export default function Cards(props) {
           >
             <div>
               <p class="text-xl font-semibold my-2">
-                {data.marca} - {data.modelo} -{data.id}
+              {data.id} - {data.marca} - {data.modelo}
               </p>
               <div class="flex space-x-2 text-gray-600 text-sm">
                 <svg
@@ -110,7 +123,9 @@ export default function Cards(props) {
                 <div class="my-2 flex flex-col">
                   <button
                     type="button"
-                    onClick={handleChange}
+                    // onClick={handleChange}
+                    onClick={() => handleChange(open, data)}
+
                     class="p-0 text-base mb-2 font-semibold hover:text-red-700  mouse transition ease-in duration-200 focus:outline-none"
                   >
                     Reservar
@@ -139,8 +154,11 @@ export default function Cards(props) {
   }
 
   /** Open Modal*/
-  function handleChange(open) {
+  function handleChange(open,e) {
+    console.log(e)
+    setDataChild( e)
     setOpen((open = true));
+
   }
   /** Close Modal */
   function handleChangeClose(open) {
@@ -157,7 +175,7 @@ export default function Cards(props) {
       style={{ backgroundColor: "#ebebeb" }}
     >
       {productToRender}
-      <Modal open={open} onUpdate={handleChangeClose} data={dataToChild} />
+      <Modal open={open} onUpdate={handleChangeClose} data={dataChild} />
     </div>
   );
 }
